@@ -9,6 +9,7 @@ const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketIO = require("socket.io");
+const { generateMessage } = require('./utils/message')
 
 const app = express();
 const server = http.createServer(app) // our own server , so we can integrate socket io
@@ -25,9 +26,8 @@ io.on('connection', (socket) => {
         console.log(`User was disconnected !!`);
     });
 
-    socket.broadcast.emit('userJoined', { from: "Admin", text: "A new user has joined", createdAt: new Date().toLocaleString() })
-
-    socket.emit('welcome', { from: "Admin", text: "Welcome to the Chat", createdAt: new Date().toLocaleString() })
+    socket.broadcast.emit('userJoined', generateMessage("Admin", "A new user has joined"))
+    socket.emit('welcome', generateMessage("Admin", "Welcome to the Chat"), function (msg) { console.log(`Got it !! ${msg}`) })
 
 })
 
