@@ -5,19 +5,31 @@ console.log(path.join(__dirname, '/../public')) // removes un - necessary steps
 
  */
 
- const path = require('path');
- const express = require('express');
- const app = express();
- const port = process.env.PORT || 3000;
+const path = require("path");
+const http = require("http");
+const express = require("express");
+const socketIO = require("socket.io");
 
- const publicFolder = path.join(__dirname, '../public')
- console.log(publicFolder)
+const app = express();
+const server = http.createServer(app) // our own server , so we can integrate socket io
+const io = socketIO(server)
+
+const publicFolder = path.join(__dirname, "../public");
+const port = process.env.PORT || 3000;
 
 
+io.on('connection', (socket) => {
+    console.log(`New User just connected`)
 
-app.use(express.static(publicFolder))
-
-
-app.listen(port,()=>{
-    console.log(`Application started !! PORT ${port}`)
+    socket.on('disconnect', () => {
+        console.log(`User was disconnected !!`);
+    });
 })
+
+
+
+app.use(express.static(publicFolder));
+
+server.listen(port, () => {
+    console.log(`Application started !! PORT ${port}`);
+});
