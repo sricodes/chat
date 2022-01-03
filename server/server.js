@@ -24,6 +24,11 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`User was disconnected !!`);
     });
+
+    socket.broadcast.emit('userJoined', { from: "Admin", text: "A new user has joined", createdAt: new Date().toLocaleString() })
+
+    socket.emit('welcome', { from: "Admin", text: "Welcome to the Chat", createdAt: new Date().toLocaleString() })
+
 })
 
 
